@@ -489,11 +489,12 @@
           <a href="https://www.linkedin.com/in/viraj-surendra-2a0841305" target="_blank"><img class="icon-img" src="linekding.png" alt="LinkedIn"> LinkedIn Profile</a>
         </div>
       </div>
-      <form class="card">
-        <input type="text" placeholder="Your Name">
-        <input type="email" placeholder="Your Email">
-        <textarea placeholder="Your Message"></textarea>
-        <button class="btn btn-primary" type="button">Send Message</button>
+      <form class="card" id="contactForm">
+        <input type="text" id="contactName" placeholder="Your Name" required>
+        <input type="email" id="contactEmail" placeholder="Your Email" required>
+        <textarea id="contactMessage" placeholder="Your Message" required></textarea>
+        <button class="btn btn-primary" type="submit" id="sendBtn">Send Message</button>
+        <p id="formStatus" style="margin-top:12px;color:#38bdf8;font-weight:700;"></p>
       </form>
     </div>
   </section>
@@ -604,5 +605,115 @@
     },{threshold:.12});
     reveals.forEach(el=>observer.observe(el));
   </script>
+  <script>
+
+const contactForm = document.getElementById("contactForm");
+const formStatus = document.getElementById("formStatus");
+const sendBtn = document.getElementById("sendBtn");
+
+contactForm.addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  sendBtn.innerText = "Sending...";
+  formStatus.innerText = "";
+
+  const data = {
+    name: document.getElementById("contactName").value,
+    email: document.getElementById("contactEmail").value,
+    message: document.getElementById("contactMessage").value
+  };
+
+  try {
+    await fetch("https://script.google.com/macros/s/AKfycbwsI-rUTTLeeHGok8x2uM-zMYHR2k4UE4ECjTqzUv_pt1vNTl1ZgdFBXZiVsbGbO9gB5A/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    formStatus.innerText = "✅ Message sent successfully!";
+    setTimeout(() => {
+  formStatus.innerText = "";
+}, 3000);
+    contactForm.reset();
+  } catch (error) {
+    formStatus.innerText = "❌ Message not sent. Please try again.";
+  }
+
+  sendBtn.innerText = "Send Message";
+});
+
+</script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  push
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCbvKKvD8TatGAy14RZFdhNqIhGOghRl0A",
+  authDomain: "viraj-portfolio-dfa49.firebaseapp.com",
+  databaseURL: "https://viraj-portfolio-dfa49-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "viraj-portfolio-dfa49",
+  storageBucket: "viraj-portfolio-dfa49.firebasestorage.app",
+  messagingSenderId: "252340703342",
+  appId: "1:252340703342:web:5cbaaf60afdcb7f031567f",
+  measurementId: "G-ZZ9J0NBXBH"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+const contactForm = document.getElementById("contactForm");
+const formStatus = document.getElementById("formStatus");
+const sendBtn = document.getElementById("sendBtn");
+
+contactForm.addEventListener("submit", async function(e){
+
+  e.preventDefault();
+
+  sendBtn.innerText = "Sending...";
+
+  const now = new Date();
+
+  const messageData = {
+    date: now.toLocaleDateString(),
+    time: now.toLocaleTimeString(),
+    name: document.getElementById("contactName").value,
+    email: document.getElementById("contactEmail").value,
+    message: document.getElementById("contactMessage").value
+  };
+
+  try {
+
+    await push(ref(db, "messages"), messageData);
+
+    formStatus.innerText = "✅ Message Sent Successfully!";
+
+    contactForm.reset();
+
+    setTimeout(() => {
+      formStatus.innerText = "";
+    }, 3000);
+
+  } catch (error) {
+
+    formStatus.innerText = "❌ Message Not Sent";
+
+  }
+
+  sendBtn.innerText = "Send Message";
+  
+
+});
+
+</script>
 </body>
 </html>
