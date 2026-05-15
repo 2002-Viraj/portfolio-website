@@ -456,99 +456,6 @@
     }
   
 /* =========================
-   MOBILE NAVIGATION MENU
-========================= */
-
-.menu-toggle{
-  display:none;
-  width:44px;
-  height:44px;
-  border:none;
-  border-radius:14px;
-  background:rgba(255,255,255,.06);
-  color:white;
-  font-size:24px;
-  cursor:pointer;
-  transition:.28s ease;
-}
-
-.menu-toggle:hover{
-  transform:translateY(-3px);
-  background:rgba(56,189,248,.16);
-}
-
-@media(max-width:980px){
-
-  .nav-inner{
-    position:relative;
-    flex-wrap:wrap;
-  }
-
-  .menu-toggle{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    order:2;
-  }
-
-  .nav-actions{
-    order:3;
-    margin-left:auto;
-  }
-
-  .nav-links{
-    order:4;
-    width:100%;
-    display:none !important;
-    flex-direction:column;
-    gap:16px;
-    padding:20px;
-    margin-top:14px;
-    border:1px solid var(--line);
-    border-radius:20px;
-    background:rgba(15,23,42,.96);
-    box-shadow:var(--shadow);
-  }
-
-  .nav-links.show{
-    display:flex !important;
-  }
-
-  .nav-links li a{
-    display:block;
-    padding:10px 12px;
-    border-radius:12px;
-  }
-
-  .nav-links li a:hover{
-    background:rgba(56,189,248,.10);
-  }
-
-  body.light-mode .nav-links{
-    background:rgba(255,255,255,.96);
-  }
-}
-
-@media(max-width:640px){
-  .nav-actions .btn-outline,
-  .nav-actions .btn-primary{
-    padding:10px 12px;
-    font-size:12px;
-  }
-
-  .nav-actions{
-    gap:7px;
-  }
-
-  .btn-icon,
-  .menu-toggle{
-    width:40px;
-    height:40px;
-  }
-}
-
-
-/* =========================
    FIXED LIGHT MODE + MOBILE NAV
 ========================= */
 
@@ -862,6 +769,114 @@ body.light-theme .nav-links{
   background:rgba(255,255,255,.96) !important;
 }
 
+
+/* ==================================================
+   FINAL WORKING MOBILE MENU
+================================================== */
+
+.menu-toggle{
+  display:none;
+  width:46px;
+  height:46px;
+  min-width:46px;
+  border:none;
+  border-radius:14px;
+  background:rgba(255,255,255,.08);
+  color:#ffffff;
+  font-size:25px;
+  cursor:pointer;
+  transition:.28s ease;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:3000;
+}
+
+.menu-toggle:hover{
+  transform:translateY(-3px);
+  background:rgba(56,189,248,.18);
+}
+
+@media(max-width:980px){
+
+  .nav-inner{
+    position:relative;
+    flex-wrap:wrap;
+  }
+
+  .menu-toggle{
+    display:flex !important;
+    order:2;
+  }
+
+  .nav-actions{
+    order:3;
+    margin-left:auto;
+  }
+
+  .nav-links{
+    order:4;
+    width:100%;
+    display:none !important;
+    flex-direction:column !important;
+    gap:12px !important;
+    padding:18px !important;
+    margin-top:14px !important;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:rgba(15,23,42,.98);
+    box-shadow:var(--shadow);
+  }
+
+  .nav-links.mobile-open{
+    display:flex !important;
+  }
+
+  .nav-links li{
+    width:100%;
+  }
+
+  .nav-links li a{
+    display:block;
+    width:100%;
+    padding:11px 13px;
+    border-radius:12px;
+    color:#e2e8f0;
+  }
+
+  .nav-links li a:hover{
+    background:rgba(56,189,248,.12);
+  }
+
+  body.light-theme .nav-links{
+    background:rgba(255,255,255,.98) !important;
+  }
+
+  body.light-theme .nav-links li a{
+    color:#0f172a !important;
+  }
+}
+
+@media(max-width:640px){
+  .nav-actions{
+    gap:7px;
+  }
+
+  .nav-actions .btn-outline,
+  .nav-actions .btn-primary{
+    padding:10px 11px;
+    font-size:12px;
+  }
+
+  .btn-icon,
+  .theme-switch,
+  .menu-toggle{
+    width:40px;
+    height:40px;
+    min-width:40px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -884,7 +899,7 @@ body.light-theme .nav-links{
         <li><a href="#education">Education</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <button class="menu-toggle" id="menuToggle" title="Open Menu">☰</button>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu">☰</button>
       <div class="nav-actions">
         <a class="btn btn-icon" href="https://github.com/2002-Viraj" target="_blank" title="GitHub"><img class="icon-img" src="Github(1).png" alt="GitHub"></a>
         <a class="btn btn-icon" href="https://www.linkedin.com/in/viraj-surendra-2a0841305" target="_blank" title="LinkedIn"><img class="icon-img" src="linekding.png" alt="LinkedIn"></a>
@@ -1319,6 +1334,52 @@ contactForm.addEventListener("submit", async function(e){
     document.addEventListener("DOMContentLoaded", setupFinalThemeToggle);
   }else{
     setupFinalThemeToggle();
+  }
+})();
+</script>
+
+
+<script>
+/* ==================================================
+   FINAL WORKING MOBILE MENU SCRIPT
+================================================== */
+(function(){
+  function setupMobileMenu(){
+    var menuBtn = document.getElementById("menuToggle");
+    var navLinks = document.querySelector(".nav-links");
+
+    if(!menuBtn || !navLinks){
+      console.log("Mobile menu elements not found");
+      return;
+    }
+
+    menuBtn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
+      navLinks.classList.toggle("mobile-open");
+      menuBtn.textContent = navLinks.classList.contains("mobile-open") ? "✕" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(function(link){
+      link.addEventListener("click", function(){
+        navLinks.classList.remove("mobile-open");
+        menuBtn.textContent = "☰";
+      });
+    });
+
+    document.addEventListener("click", function(e){
+      if(!navLinks.contains(e.target) && !menuBtn.contains(e.target)){
+        navLinks.classList.remove("mobile-open");
+        menuBtn.textContent = "☰";
+      }
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", setupMobileMenu);
+  }else{
+    setupMobileMenu();
   }
 })();
 </script>
